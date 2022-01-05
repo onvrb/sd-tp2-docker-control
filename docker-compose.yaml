@@ -17,6 +17,7 @@ services:
     # ports:
     #     - '9090:9090'
     restart: unless-stopped
+    user: "0:0" # use root to prevent permission errors
     volumes:
       - './prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml'
       - './prometheus:/prometheus' # persistent data

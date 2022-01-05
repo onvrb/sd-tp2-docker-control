@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    # ports:
+    #     - '9090:9090'
+    restart: unless-stopped
+    volumes:
+      - './prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - './prometheus:/prometheus' # persistent data
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    user: "0:0" # use root to prevent permission errors
+    volumes:
+      - ./grafana/storage:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=x6sTL6SuE99vJjhRTwqQGkGP

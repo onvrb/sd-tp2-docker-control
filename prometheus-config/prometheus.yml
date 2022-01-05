@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 30s
+  external_labels:
+    monitor: 'node'
+scrape_configs:
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['192.168.49.10:9100'] # control
+      - targets: ['192.168.49.11:9100'] # node 1
+      - targets: ['192.168.49.12:9100'] # node 2
+      - targets: ['192.168.49.13:9100'] # node 3
